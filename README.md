@@ -1,4 +1,4 @@
-ExtraSpawns (CounterStrikeSharp Plugin)
+CS2-Extra-Spawns (CounterStrikeSharp Plugin)
 
 Automatically generates additional spawn points for both Terrorists and Counter-Terrorists, ensuring large servers (up to 64 players) never run out of spawn locations.
 
