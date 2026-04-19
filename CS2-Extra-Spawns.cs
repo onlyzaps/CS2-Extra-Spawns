@@ -71,8 +71,8 @@ namespace CS2_Extra_Spawns
             Server.ExecuteCommand("mp_solid_teammates 0");
             Server.PrintToConsole("[ExtraSpawns] mp_solid_teammates set to 0 at round start.");
 
-            // Restore collisions after 3 seconds
-            _solidTeammatesTimer = AddTimer(3.0f, () =>
+            // Restore collisions after 5 seconds
+            _solidTeammatesTimer = AddTimer(5.0f, () =>
             {
                 Server.ExecuteCommand("mp_solid_teammates 2");
                 Server.PrintToConsole("[ExtraSpawns] mp_solid_teammates restored to 2.");
