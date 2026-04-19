@@ -27,6 +27,8 @@ namespace CS2_Extra_Spawns
             new Vector(0, -5, 5)
         };
 
+        private CSTimer? _solidTeammatesTimer;
+
         public override void Load(bool hotReload)
         {
             RegisterListener<Listeners.OnMapStart>(OnMapStart);
@@ -38,6 +40,12 @@ namespace CS2_Extra_Spawns
                 AddExtraSpawns("info_player_counterterrorist");
                 info.ReplyToCommand("[ExtraSpawns] Extra spawns generated.");
             });
+        }
+
+        public override void Unload(bool hotReload)
+        {
+            _solidTeammatesTimer?.Kill();
+            _solidTeammatesTimer = null;
         }
 
         private void OnMapStart(string map)
@@ -52,9 +60,24 @@ namespace CS2_Extra_Spawns
 
         private HookResult OnRoundStart(EventRoundStart ev, GameEventInfo info)
         {
+            _solidTeammatesTimer?.Kill();
+            _solidTeammatesTimer = null;
+
             // Recreate spawns every round -- CS2 can clean up dynamic entities between rounds
             AddExtraSpawns("info_player_terrorist");
             AddExtraSpawns("info_player_counterterrorist");
+
+            // Force collisions OFF so overlapping players can separate
+            Server.ExecuteCommand("mp_solid_teammates 0");
+            Server.PrintToConsole("[ExtraSpawns] mp_solid_teammates set to 0 at round start.");
+
+            // Restore collisions after 3 seconds
+            _solidTeammatesTimer = AddTimer(3.0f, () =>
+            {
+                Server.ExecuteCommand("mp_solid_teammates 2");
+                Server.PrintToConsole("[ExtraSpawns] mp_solid_teammates restored to 2.");
+                _solidTeammatesTimer = null;
+            }, TimerFlags.STOP_ON_MAPCHANGE);
 
             return HookResult.Continue;
         }
